@@ -35,6 +35,7 @@ static void registerDialects(DialectRegistry &registry) {
   registry.insert<mlir::shape::ShapeDialect>();
   registry.insert<mlir::math::MathDialect>();
   registry.insert<mlir::memref::MemRefDialect>();
+  registry.insert<mlir::emitc::EmitcDialect>();
 
   registry.insert<mlir::ONNXDialect>();
   registry.insert<mlir::KrnlOpsDialect>();

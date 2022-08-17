@@ -20,6 +20,7 @@
 #include "mlir/Pass/Pass.h"
 #include "mlir/Target/LLVMIR/Dialect/LLVMIR/LLVMToLLVMIRTranslation.h"
 #include "mlir/Transforms/Passes.h"
+#include "mlir/Conversion/AffineToStandard/AffineToStandard.h"
 
 #include "src/Compiler/CompilerOptions.hpp"
 #include "src/Compiler/CompilerPasses.hpp"
@@ -128,6 +129,11 @@ void addKrnlToLLVMPasses(
   pm.addPass(mlir::createCanonicalizerPass());
 }
 
+void addMemrefToEmitcPasses(mlir::OpPassManager &pm){
+  pm.addPass(mlir::createLowerAffinePass());
+  pm.addPass(onnx_mlir::createConvertMemrefToEmitcPass());
+}
+
 InputIRLevelType determineInputIRLevel(mlir::OwningOpRef<ModuleOp> &module) {
   Operation *moduleOp = module->getOperation();
 
@@ -168,8 +174,13 @@ void addPasses(mlir::OwningOpRef<ModuleOp> &module, mlir::PassManager &pm,
       addKrnlToAffinePasses(pm);
   }
 
-  if (inputIRLevel <= LLVMLevel && emissionTarget >= EmitLLVMIR)
+  if (inputIRLevel <= LLVMLevel && emissionTarget >= EmitLLVMIR && emissionTarget<= EmitJNI)
     addKrnlToLLVMPasses(pm, /*enableCSE=*/true, verifyInputTensors);
+  
+  if (inputIRLevel <= MLIRLevel && emissionTarget >= EmitCMLIR)
+    addMemrefToEmitcPasses(pm);
+  
+  
 }
 
 } // namespace onnx_mlir

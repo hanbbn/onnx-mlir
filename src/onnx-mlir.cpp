@@ -48,7 +48,9 @@ int main(int argc, char *argv[]) {
           clEnumVal(EmitObj, "Compile the input into a object file."),
           clEnumVal(
               EmitLib, "Compile the input into a shared library (default)."),
-          clEnumVal(EmitJNI, "Compile the input into a jar file.")),
+          clEnumVal(EmitJNI, "Compile the input into a jar file."),
+          clEnumVal(EmitCMLIR, "Compile the input into emitc dialect")
+          clEnumVal(EmitCpp, "Compile the input into a cpp file.")),
       llvm::cl::init(EmitLib), llvm::cl::cat(OnnxMlirOptions));
 
   // Register MLIR command line options.

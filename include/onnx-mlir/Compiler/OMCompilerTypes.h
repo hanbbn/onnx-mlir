@@ -18,6 +18,8 @@ typedef enum {
   EmitObj,
   EmitLib,
   EmitJNI,
+  EmitCMLIR,
+  EmitCpp
 } EmissionTargetType;
 
 /* Input IR can be at one of these levels */

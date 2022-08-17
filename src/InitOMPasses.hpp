@@ -94,6 +94,10 @@ void initOMPasses(int optLevel) {
     return createConvertONNXToTOSAPass();
   });
 
+  mlir::registerPass([]() -> std::unique_ptr<mlir::Pass> {
+    return createConvertMemrefToEmitcPass();
+  });
+
   mlir::registerPass(
       []() -> std::unique_ptr<mlir::Pass> { return createLowerToMhloPass(); });
 }

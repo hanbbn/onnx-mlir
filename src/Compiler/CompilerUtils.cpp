@@ -360,7 +360,10 @@ std::string getTargetFilename(
   case EmitONNXBasic:
   case EmitONNXIR:
   case EmitMLIR:
+  case EmitCMLIR:
     return filenameNoExt + ".onnx.mlir";
+  case EmitCpp:
+    return filenameNoExt + ".cpp";
   }
   llvm_unreachable("all cases should be handled in switch");
 }
@@ -615,6 +618,7 @@ void registerDialects(mlir::MLIRContext &context) {
   context.getOrLoadDialect<mlir::memref::MemRefDialect>();
   context.getOrLoadDialect<mlir::ONNXDialect>();
   context.getOrLoadDialect<mlir::KrnlOpsDialect>();
+  context.getOrLoadDialect<mlir::emitc::EmitcDialect>();
 }
 
 // Return 0 on success, error number on failure.
@@ -759,7 +763,7 @@ static int emitOutputFiles(std::string outputNameNoExt,
 
     // Elide element attributes if larger than 100.
     if (emissionTarget == EmitONNXBasic || emissionTarget == EmitONNXIR ||
-        emissionTarget == EmitMLIR) {
+        emissionTarget == EmitMLIR || emissionTarget == EmitCMLIR) {
       std::string tempNameWithExt = outputNameNoExt + ".tmp";
       int rc = outputCode(module, tempNameWithExt, /*largeElementLimit=*/100);
       if (VerboseOutput) {
